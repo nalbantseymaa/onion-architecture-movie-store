@@ -1,5 +1,4 @@
 using Domain.Common;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Domain.Entities;
 
@@ -17,7 +16,6 @@ public class Movie : BaseEntity
     public virtual Director Director
     { get; set; }
     public virtual Genre Genre { get; set; }
-    public virtual ICollection<Customer> Customers
-    { get; set; }
+    public virtual ICollection<PurchasedMovie> PurchasedMovies { get; set; }
 
 }
