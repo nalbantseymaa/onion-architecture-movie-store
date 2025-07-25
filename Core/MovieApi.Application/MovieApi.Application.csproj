@@ -6,4 +6,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+
+<ItemGroup>
+  <ProjectReference Include="..\MovieApi.Domain\MovieApi.Domain.csproj" />
+</ItemGroup>
+
+
+    <ItemGroup>
+      <PackageReference Include="EntityFrameworkCore.Query" Version="1.2.6" />
+    </ItemGroup>
+
 </Project>
+ 
