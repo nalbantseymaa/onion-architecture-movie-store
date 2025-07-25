@@ -17,5 +17,7 @@
  
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\MovieApi.Persistence\MovieApi.Persistence.csproj" />
+    <ProjectReference Include="..\..\Core\MovieApi.Domain\MovieApi.Domain.csproj" />
+    <ProjectReference Include="..\..\Core\MovieApi.Application\MovieApi.Application.csproj" />
  </ItemGroup>
 </Project>

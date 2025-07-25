@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MovieApi.Application.Interfaces;
+using MovieApi.Application.UnitOfWorks;
 using MovieApi.Persistence.Context;
 using MovieApi.Persistence.Repositories;
 
@@ -17,5 +18,6 @@ public static class Registration
         services.AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>));
 
         services.AddScoped(typeof(IWriteRepository<>), typeof(WriteRepository<>));
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 }

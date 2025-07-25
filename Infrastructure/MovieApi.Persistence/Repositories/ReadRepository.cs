@@ -35,8 +35,10 @@ public class ReadRepository<T> : IReadRepository<T> where T : class, new()
         if (enableTracking) queryable = queryable.AsNoTracking();
         if (include != null) queryable = include(queryable);
         if (predicate != null) queryable = queryable.Where(predicate);
-        if (orderBy != null) queryable = orderBy(queryable);
-        return await orderBy(queryable).ToListAsync();
+        if (orderBy != null)
+            return await orderBy(queryable).ToListAsync();
+
+        return await queryable.ToListAsync();
     }
 
     public async Task<T> GetAsync(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include, bool enableTracking)
