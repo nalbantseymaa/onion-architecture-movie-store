@@ -1,6 +1,6 @@
-using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using MovieApi.Domain.Entities;
 
 namespace MovieApi.Persistence.Configurations;
 
@@ -8,15 +8,14 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
 {
     public void Configure(EntityTypeBuilder<Movie> builder)
     {
-
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).UseIdentityColumn();
 
+        builder.Property(x => x.CreatedBy).IsRequired(true).HasMaxLength(250);
         builder.Property(x => x.CreatedAt).IsRequired(true);
-        builder.Property(x => x.CreatedBy).IsRequired(false);
-        builder.Property(x => x.UpdatedAt).IsRequired(true).HasMaxLength(250);
         builder.Property(x => x.UpdatedBy).IsRequired(false).HasMaxLength(250);
-        builder.Property(x => x.IsDeleted).IsRequired(true).HasDefaultValue(true);
+        builder.Property(x => x.UpdatedAt).IsRequired(false);
+        builder.Property(x => x.IsDeleted).IsRequired(true).HasDefaultValue(false);
 
         builder.Property(x => x.Title).IsRequired(true).HasMaxLength(250);
         builder.Property(x => x.DirectorId).IsRequired(true);
@@ -42,7 +41,7 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
         builder.HasMany(x => x.PurchasedMovies)
             .WithOne(x => x.Movie)
             .HasForeignKey(x => x.MovieId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.ToTable("Movies");
     }

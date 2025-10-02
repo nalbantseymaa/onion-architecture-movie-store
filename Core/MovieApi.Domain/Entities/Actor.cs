@@ -1,6 +1,6 @@
-using Domain.Common;
+using MovieApi.Domain.Common;
 
-namespace Domain.Entities;
+namespace MovieApi.Domain.Entities;
 
 public class Actor : Person
 {
