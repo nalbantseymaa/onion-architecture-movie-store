@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieApi.Persistence.Context;
 
@@ -11,9 +12,11 @@ using MovieApi.Persistence.Context;
 namespace MovieApi.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250930212528_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,19 +40,19 @@ namespace MovieApi.Persistence.Migrations
                     b.ToTable("MovieActors", (string)null);
                 });
 
-            modelBuilder.Entity("GenreUser", b =>
+            modelBuilder.Entity("CustomerGenre", b =>
                 {
+                    b.Property<long>("CustomersByGenreId")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("FavoriteGenresId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("UsersByGenreId")
-                        .HasColumnType("bigint");
+                    b.HasKey("CustomersByGenreId", "FavoriteGenresId");
 
-                    b.HasKey("FavoriteGenresId", "UsersByGenreId");
+                    b.HasIndex("FavoriteGenresId");
 
-                    b.HasIndex("UsersByGenreId");
-
-                    b.ToTable("UserGenres", (string)null);
+                    b.ToTable("CustomerGenres", (string)null);
                 });
 
             modelBuilder.Entity("MovieApi.Domain.Entities.Actor", b =>
@@ -252,6 +255,9 @@ namespace MovieApi.Persistence.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWID()");
 
+                    b.Property<long>("CustomerId")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("MovieId")
                         .HasColumnType("bigint");
 
@@ -261,14 +267,11 @@ namespace MovieApi.Persistence.Migrations
                     b.Property<DateTime>("PurchaseDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("MovieId");
+                    b.HasIndex("CustomerId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("MovieId");
 
                     b.ToTable("PurchasedMovies", (string)null);
                 });
@@ -346,6 +349,18 @@ namespace MovieApi.Persistence.Migrations
                         {
                             t.HasCheckConstraint("CK_User_RoleCheck", "Role IN ('Admin', 'Customer')");
                         });
+
+                    b.UseTptMappingStrategy();
+                });
+
+            modelBuilder.Entity("MovieApi.Domain.Entities.Customer", b =>
+                {
+                    b.HasBaseType("MovieApi.Domain.Entities.User");
+
+                    b.ToTable("Customers", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_User_RoleCheck", "Role IN ('Admin', 'Customer')");
+                        });
                 });
 
             modelBuilder.Entity("ActorMovie", b =>
@@ -363,17 +378,17 @@ namespace MovieApi.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("GenreUser", b =>
+            modelBuilder.Entity("CustomerGenre", b =>
                 {
-                    b.HasOne("MovieApi.Domain.Entities.Genre", null)
+                    b.HasOne("MovieApi.Domain.Entities.Customer", null)
                         .WithMany()
-                        .HasForeignKey("FavoriteGenresId")
+                        .HasForeignKey("CustomersByGenreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MovieApi.Domain.Entities.User", null)
+                    b.HasOne("MovieApi.Domain.Entities.Genre", null)
                         .WithMany()
-                        .HasForeignKey("UsersByGenreId")
+                        .HasForeignKey("FavoriteGenresId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -399,21 +414,30 @@ namespace MovieApi.Persistence.Migrations
 
             modelBuilder.Entity("MovieApi.Domain.Entities.PurchasedMovie", b =>
                 {
+                    b.HasOne("MovieApi.Domain.Entities.Customer", "Customer")
+                        .WithMany("PurchasedMovies")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("MovieApi.Domain.Entities.Movie", "Movie")
                         .WithMany("PurchasedMovies")
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MovieApi.Domain.Entities.User", "User")
-                        .WithMany("PurchasedMovies")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Customer");
 
                     b.Navigation("Movie");
+                });
 
-                    b.Navigation("User");
+            modelBuilder.Entity("MovieApi.Domain.Entities.Customer", b =>
+                {
+                    b.HasOne("MovieApi.Domain.Entities.User", null)
+                        .WithOne()
+                        .HasForeignKey("MovieApi.Domain.Entities.Customer", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MovieApi.Domain.Entities.Director", b =>
@@ -431,7 +455,7 @@ namespace MovieApi.Persistence.Migrations
                     b.Navigation("PurchasedMovies");
                 });
 
-            modelBuilder.Entity("MovieApi.Domain.Entities.User", b =>
+            modelBuilder.Entity("MovieApi.Domain.Entities.Customer", b =>
                 {
                     b.Navigation("PurchasedMovies");
                 });

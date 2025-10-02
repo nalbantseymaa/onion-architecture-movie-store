@@ -12,8 +12,8 @@ using MovieApi.Persistence.Context;
 namespace MovieApi.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250723115309_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251002125138_RemoveTables")]
+    partial class RemoveTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,22 +40,22 @@ namespace MovieApi.Persistence.Migrations
                     b.ToTable("MovieActors", (string)null);
                 });
 
-            modelBuilder.Entity("CustomerGenre", b =>
+            modelBuilder.Entity("GenreUser", b =>
                 {
-                    b.Property<long>("CustomersByGenreId")
-                        .HasColumnType("bigint");
-
                     b.Property<long>("FavoriteGenresId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("CustomersByGenreId", "FavoriteGenresId");
+                    b.Property<long>("UsersByGenreId")
+                        .HasColumnType("bigint");
 
-                    b.HasIndex("FavoriteGenresId");
+                    b.HasKey("FavoriteGenresId", "UsersByGenreId");
 
-                    b.ToTable("CustomerGenres", (string)null);
+                    b.HasIndex("UsersByGenreId");
+
+                    b.ToTable("UserGenres", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.Actor", b =>
+            modelBuilder.Entity("MovieApi.Domain.Entities.Actor", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -67,7 +67,9 @@ namespace MovieApi.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -77,7 +79,7 @@ namespace MovieApi.Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasDefaultValue(false);
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -89,8 +91,6 @@ namespace MovieApi.Persistence.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .IsRequired()
-                        .HasMaxLength(250)
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
@@ -102,7 +102,7 @@ namespace MovieApi.Persistence.Migrations
                     b.ToTable("Actors", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.Director", b =>
+            modelBuilder.Entity("MovieApi.Domain.Entities.Director", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -114,7 +114,9 @@ namespace MovieApi.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -124,7 +126,7 @@ namespace MovieApi.Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasDefaultValue(false);
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -136,8 +138,6 @@ namespace MovieApi.Persistence.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .IsRequired()
-                        .HasMaxLength(250)
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
@@ -149,7 +149,7 @@ namespace MovieApi.Persistence.Migrations
                     b.ToTable("Directors", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.Genre", b =>
+            modelBuilder.Entity("MovieApi.Domain.Entities.Genre", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -161,12 +161,14 @@ namespace MovieApi.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -174,8 +176,6 @@ namespace MovieApi.Persistence.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .IsRequired()
-                        .HasMaxLength(250)
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
@@ -187,7 +187,7 @@ namespace MovieApi.Persistence.Migrations
                     b.ToTable("Genres", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.Movie", b =>
+            modelBuilder.Entity("MovieApi.Domain.Entities.Movie", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -199,7 +199,9 @@ namespace MovieApi.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
@@ -217,7 +219,7 @@ namespace MovieApi.Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasDefaultValue(false);
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -231,8 +233,6 @@ namespace MovieApi.Persistence.Migrations
                         .HasColumnType("nvarchar(250)");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .IsRequired()
-                        .HasMaxLength(250)
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
@@ -248,16 +248,12 @@ namespace MovieApi.Persistence.Migrations
                     b.ToTable("Movies", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.PurchasedMovie", b =>
+            modelBuilder.Entity("MovieApi.Domain.Entities.PurchasedMovie", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("CustomerId")
-                        .HasColumnType("bigint");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<long>("MovieId")
                         .HasColumnType("bigint");
@@ -268,16 +264,19 @@ namespace MovieApi.Persistence.Migrations
                     b.Property<DateTime>("PurchaseDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId");
-
                     b.HasIndex("MovieId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("PurchasedMovies", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.User", b =>
+            modelBuilder.Entity("MovieApi.Domain.Entities.User", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -289,9 +288,16 @@ namespace MovieApi.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -299,10 +305,15 @@ namespace MovieApi.Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasDefaultValue(false);
 
                     b.Property<DateTime?>("LastLoginDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime>("OpenDate")
                         .HasColumnType("datetime2");
@@ -318,8 +329,6 @@ namespace MovieApi.Persistence.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .IsRequired()
-                        .HasMaxLength(250)
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
@@ -333,9 +342,6 @@ namespace MovieApi.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email")
-                        .IsUnique();
-
                     b.HasIndex("UserName")
                         .IsUnique();
 
@@ -343,97 +349,47 @@ namespace MovieApi.Persistence.Migrations
                         {
                             t.HasCheckConstraint("CK_User_RoleCheck", "Role IN ('Admin', 'Customer')");
                         });
-
-                    b.UseTptMappingStrategy();
-                });
-
-            modelBuilder.Entity("Domain.Entities.Admin", b =>
-                {
-                    b.HasBaseType("Domain.Entities.User");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("MiddleName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.ToTable("Admins", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_User_RoleCheck", "Role IN ('Admin', 'Customer')");
-                        });
-                });
-
-            modelBuilder.Entity("Domain.Entities.Customer", b =>
-                {
-                    b.HasBaseType("Domain.Entities.User");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("MiddleName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.ToTable("Customers", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_User_RoleCheck", "Role IN ('Admin', 'Customer')");
-                        });
                 });
 
             modelBuilder.Entity("ActorMovie", b =>
                 {
-                    b.HasOne("Domain.Entities.Movie", null)
+                    b.HasOne("MovieApi.Domain.Entities.Movie", null)
                         .WithMany()
                         .HasForeignKey("ActedMoviesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Actor", null)
+                    b.HasOne("MovieApi.Domain.Entities.Actor", null)
                         .WithMany()
                         .HasForeignKey("ActorsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CustomerGenre", b =>
+            modelBuilder.Entity("GenreUser", b =>
                 {
-                    b.HasOne("Domain.Entities.Customer", null)
-                        .WithMany()
-                        .HasForeignKey("CustomersByGenreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Genre", null)
+                    b.HasOne("MovieApi.Domain.Entities.Genre", null)
                         .WithMany()
                         .HasForeignKey("FavoriteGenresId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("MovieApi.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersByGenreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Entities.Movie", b =>
+            modelBuilder.Entity("MovieApi.Domain.Entities.Movie", b =>
                 {
-                    b.HasOne("Domain.Entities.Director", "Director")
+                    b.HasOne("MovieApi.Domain.Entities.Director", "Director")
                         .WithMany("DirectedMovies")
                         .HasForeignKey("DirectorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Genre", "Genre")
+                    b.HasOne("MovieApi.Domain.Entities.Genre", "Genre")
                         .WithMany("MoviesInGenre")
                         .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -444,59 +400,41 @@ namespace MovieApi.Persistence.Migrations
                     b.Navigation("Genre");
                 });
 
-            modelBuilder.Entity("Domain.Entities.PurchasedMovie", b =>
+            modelBuilder.Entity("MovieApi.Domain.Entities.PurchasedMovie", b =>
                 {
-                    b.HasOne("Domain.Entities.Customer", "Customer")
-                        .WithMany("PurchasedMovies")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Movie", "Movie")
+                    b.HasOne("MovieApi.Domain.Entities.Movie", "Movie")
                         .WithMany("PurchasedMovies")
                         .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Customer");
+                    b.HasOne("MovieApi.Domain.Entities.User", "User")
+                        .WithMany("PurchasedMovies")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Movie");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Admin", b =>
-                {
-                    b.HasOne("Domain.Entities.User", null)
-                        .WithOne()
-                        .HasForeignKey("Domain.Entities.Admin", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Domain.Entities.Customer", b =>
-                {
-                    b.HasOne("Domain.Entities.User", null)
-                        .WithOne()
-                        .HasForeignKey("Domain.Entities.Customer", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Domain.Entities.Director", b =>
+            modelBuilder.Entity("MovieApi.Domain.Entities.Director", b =>
                 {
                     b.Navigation("DirectedMovies");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Genre", b =>
+            modelBuilder.Entity("MovieApi.Domain.Entities.Genre", b =>
                 {
                     b.Navigation("MoviesInGenre");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Movie", b =>
+            modelBuilder.Entity("MovieApi.Domain.Entities.Movie", b =>
                 {
                     b.Navigation("PurchasedMovies");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Customer", b =>
+            modelBuilder.Entity("MovieApi.Domain.Entities.User", b =>
                 {
                     b.Navigation("PurchasedMovies");
                 });

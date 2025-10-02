@@ -1,4 +1,4 @@
-namespace Domain.Common;
+namespace MovieApi.Domain.Common;
 
 public class BaseEntity
 {
