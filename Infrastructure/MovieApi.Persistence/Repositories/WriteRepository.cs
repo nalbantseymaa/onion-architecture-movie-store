@@ -1,37 +1,37 @@
 using Microsoft.EntityFrameworkCore;
-using MovieApi.Application.Interfaces;
+using MovieApi.Application.Interfaces.Repositories;
 
 namespace MovieApi.Persistence.Repositories;
 
 public class WriteRepository<T> : IWriteRepository<T> where T : class, new()
 {
     private readonly DbContext dbContext;
+    private readonly DbSet<T> dbSet;
 
     public WriteRepository(DbContext dbContext)
     {
         this.dbContext = dbContext;
+        dbSet = dbContext.Set<T>();
     }
-
-    private DbSet<T> Table => dbContext.Set<T>();
 
     public async Task AddAsync(T entity)
     {
-        await Table.AddAsync(entity);
+        await dbSet.AddAsync(entity);
     }
 
     public async Task AddRangeAsync(IList<T> entities)
     {
-        await Table.AddRangeAsync(entities);
+        await dbSet.AddRangeAsync(entities);
     }
 
-    public async Task<T> UpdateAsync(T entity)
+    public void Update(T entity)
     {
-        await Task.Run(() => Table.Update(entity));
-        return entity;
+        dbSet.Update(entity);
+
     }
 
-    public async Task DeleteAsync(T entity)
+    public void Delete(T entity)
     {
-        Table.Remove(entity);
+        dbSet.Remove(entity);
     }
 }
