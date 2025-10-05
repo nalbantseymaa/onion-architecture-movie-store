@@ -1,17 +1,20 @@
-using MovieApi.Application.Interfaces;
+using MovieApi.Application.Interfaces.Repositories;
+using MovieApi.Application.Interfaces.UnitOfWorks;
 using MovieApi.Persistence.Context;
 using MovieApi.Persistence.Repositories;
 
-namespace MovieApi.Application.UnitOfWorks;
+namespace MovieApi.Persistence.UnitOfWorks;
 
 public class UnitOfWork : IUnitOfWork
 {
+    //Consistency : Single DbContext Instance
     private readonly AppDbContext dbContext;
     public UnitOfWork(AppDbContext dbContext)
     {
         this.dbContext = dbContext;
     }
 
+    //Generic Repository Pattern Implementation
     public IReadRepository<T> GetReadRepository<T>() where T : class, new()
     {
         return new ReadRepository<T>(dbContext);
@@ -22,16 +25,16 @@ public class UnitOfWork : IUnitOfWork
         return new WriteRepository<T>(dbContext);
     }
 
+    //Transaction Management
     public int SaveChanges()
     {
-        dbContext.SaveChanges();
-        return 0;
+        return dbContext.SaveChanges();
     }
 
     public async Task<int> SaveChangesAsync()
     {
-        await dbContext.SaveChangesAsync();
-        return 0;
+        return await dbContext.SaveChangesAsync();
+
     }
 
     public async ValueTask DisposeAsync()

@@ -11,6 +11,8 @@ builder.Configuration
     .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
 // Register the persistence layer (DbContext'i burada kaydediyoruz)
+//Uygulama başlarken servislerin DI’a eklenmesi gerekir.
+// Burada AddPersistence extension method'unu çağırıyoruz
 builder.Services.AddPersistence(builder.Configuration);
 
 // Add services to the container.

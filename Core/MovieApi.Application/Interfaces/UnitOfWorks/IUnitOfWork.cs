@@ -1,6 +1,6 @@
-using MovieApi.Application.Interfaces;
+using MovieApi.Application.Interfaces.Repositories;
 
-namespace MovieApi.Application.UnitOfWorks;
+namespace MovieApi.Application.Interfaces.UnitOfWorks;
 
 public interface IUnitOfWork : IAsyncDisposable
 {
