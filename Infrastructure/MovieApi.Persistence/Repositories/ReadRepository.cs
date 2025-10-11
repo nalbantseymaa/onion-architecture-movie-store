@@ -28,6 +28,24 @@ public class ReadRepository<T> : IReadRepository<T> where T : class, new()
         return await queryable.ToListAsync();
     }
 
+    //DB sorgusunu hemen çalıştırır ve tek bir entity (T) döndürür.
+    public async Task<T> GetAsync(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include, bool enableTracking = false)
+    {
+        IQueryable<T> queryable = dbSet;
+        if (enableTracking) queryable = queryable.AsNoTracking();
+        if (include != null) queryable = include(queryable);
+        //queryable = queryable.Where(predicate);
+        return await queryable.FirstOrDefaultAsync(predicate);
+    }
+
+    //// Find: Sorguyu sadece hazırlar ve IQueryable<T> döndürür.
+    // Bu aşamada **veritabanına gitmez**. Sorgu, terminal bir operasyon (ToList/First/Single) çağrılana kadar çalıştırılmaz.
+    public IQueryable<T> Find(Expression<Func<T, bool>> predicate, bool enableTracking = false)
+    {
+        if (!enableTracking) dbSet.AsNoTracking();
+        return dbSet.Where(predicate);
+    }
+
     public async Task<IList<T>> GetAllByPagingAsync(Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool enableTracking = false, int currentPage = 1, int pageSize = 3)
     {
         IQueryable<T> queryable = dbSet;
@@ -40,26 +58,13 @@ public class ReadRepository<T> : IReadRepository<T> where T : class, new()
         return await queryable.Skip((currentPage - 1) * pageSize).Take(pageSize).ToListAsync();
     }
 
-    public async Task<T> GetAsync(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include, bool enableTracking = false)
-    {
-        IQueryable<T> queryable = dbSet;
-        if (enableTracking) queryable = queryable.AsNoTracking();
-        if (include != null) queryable = include(queryable);
-        //queryable = queryable.Where(predicate);
-        return await queryable.FirstOrDefaultAsync(predicate);
-    }
-
     public async Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null)
     {
-        dbSet.AsNoTracking();
-        if (predicate != null) dbSet.Where(predicate);
-        return await dbSet.CountAsync();
+        IQueryable<T> query = dbSet.AsNoTracking();
+        if (predicate != null)
+            query = query.Where(predicate);
+        return await query.CountAsync();
     }
 
-    public IQueryable<T> Find(Expression<Func<T, bool>> predicate, bool enableTracking = false)
-    {
-        if (!enableTracking) dbSet.AsNoTracking();
-        return dbSet.Where(predicate);
-    }
 
 }
