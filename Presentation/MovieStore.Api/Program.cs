@@ -1,3 +1,4 @@
+using MovieApi.Application;
 using MovieApi.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,7 @@ builder.Configuration
 //Uygulama başlarken servislerin DI’a eklenmesi gerekir.
 // Burada AddPersistence extension method'unu çağırıyoruz
 builder.Services.AddPersistence(builder.Configuration);
+builder.Services.AddApplication();
 
 // Add services to the container.
 builder.Services.AddControllers();
