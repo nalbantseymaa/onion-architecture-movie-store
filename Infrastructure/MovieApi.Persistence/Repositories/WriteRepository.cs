@@ -27,7 +27,6 @@ public class WriteRepository<T> : IWriteRepository<T> where T : class, new()
     public void Update(T entity)
     {
         dbSet.Update(entity);
-
     }
 
     public void Delete(T entity)
