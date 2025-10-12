@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
-using System.ComponentModel.DataAnnotations;
 using SendGrid.Helpers.Errors.Model;
+using FluentValidation;
 
 namespace MovieApi.Application.Exceptions;
 
@@ -24,10 +24,21 @@ public class ExceptionMiddleware : IMiddleware
         httpContext.Response.ContentType = "application/json";
         httpContext.Response.StatusCode = statusCode;
 
+        if (exception.GetType() == typeof(ValidationException))
+        {
+            return httpContext.Response.WriteAsync(new ExceptionModel
+            {
+                StatusCode = StatusCodes.Status422UnprocessableEntity,
+                Errors = ((ValidationException)exception).Errors.Select(e => e.ErrorMessage)
+            }.ToString());
+        }
+
+        var errors = new List<string> { $"Error Message : {exception.Message}" };
+
         return httpContext.Response.WriteAsync(new ExceptionModel
         {
             StatusCode = statusCode,
-            Message = exception.Message
+            Errors = errors
         }.ToString());
     }
 

@@ -1,7 +1,9 @@
 using System.Reflection;
+using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using MovieApi.Application.Behaviors;
 using MovieApi.Application.Exceptions;
-using MovieApi.Application.Loggings;
 using MovieApi.Application.Mapper;
 
 namespace MovieApi.Application;
@@ -17,6 +19,10 @@ public static class Registration
         services.AddAutoMapper(typeof(MapperConfig));
 
         services.AddTransient<ExceptionMiddleware>();
+
+        services.AddValidatorsFromAssembly(assembly);
+
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(FluentValidationBehavior<,>));
 
     }
 }
