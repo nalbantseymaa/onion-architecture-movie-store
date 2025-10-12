@@ -1,5 +1,6 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using MovieApi.Application.Exceptions;
 using MovieApi.Application.Mapper;
 
 namespace MovieApi.Application;
@@ -13,5 +14,7 @@ public static class Registration
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
 
         services.AddAutoMapper(typeof(MapperConfig));
+
+        services.AddTransient<ExceptionMiddleware>();       
     }
 }

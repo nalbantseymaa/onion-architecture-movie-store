@@ -32,12 +32,8 @@ public class FindActorsHandler : IRequestHandler<FindActorsRequest, IList<FindAc
 
         var actors = unitOfWork.GetReadRepository<Actor>().Find(predicate: predicate);
 
-        // TODO  BASE RESPONSE 
         if (actors == null)
-            return new List<FindActorsResponse>()
-            {
-                // Message = "Actors not found" 
-            };
+            throw new Exception("Actors not found");
 
         var actorDtos = mapper.Map<IList<ActorDto>>(actors);
         var response = new List<FindActorsResponse>();

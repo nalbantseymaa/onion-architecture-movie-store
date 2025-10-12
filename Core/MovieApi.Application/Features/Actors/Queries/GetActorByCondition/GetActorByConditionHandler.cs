@@ -44,12 +44,8 @@ public class GetActorByConditionHandler : IRequestHandler<GetActorByConditionReq
                      .ThenInclude(am => am.Actors)
         );
 
-        // TODO
         if (actor == null)
-            return new GetActorByConditionResponse
-            {
-                // Message = "Actor not found" 
-            };
+            throw new Exception("Actor not found");
 
         var actorDto = mapper.Map<ActorDto>(actor);
         var movieDtos = actor.ActedMovies != null && actor.ActedMovies.Any()

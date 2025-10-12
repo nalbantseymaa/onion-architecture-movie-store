@@ -27,12 +27,8 @@ public class GetActorsByPagingHandler : IRequestHandler<GetActorsByPagingRequest
             pageSize: (int)request.PageSize
         );
 
-        // TODO  BASE RESPONSE 
         if (actors == null)
-            return new GetActorsByPagingResponse
-            {
-                Actors = new List<ActorDto>() // boş ama null değil
-            };
+            throw new Exception("Actors not found");
 
         var actorDtos = mapper.Map<List<ActorDto>>(actors);
 
