@@ -22,7 +22,7 @@ public class UpdateActorHandler : IRequestHandler<UpdateActorRequest, int>
             .GetAsync(predicate: x => x.Id == request.ActorId, enableTracking: true);
 
         if (actor == null)
-            return 0;
+            throw new Exception("Actor not found");
 
         mapper.Map(request, actor);
         actor.UpdatedAt = DateTime.UtcNow;

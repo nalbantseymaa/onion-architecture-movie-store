@@ -22,7 +22,12 @@ public class CreateActorHandler : IRequestHandler<CreateActorRequest, int>
         actor.CreatedBy = "system";
         actor.CreatedAt = DateTime.UtcNow;
         await unitOfWork.GetWriteRepository<Actor>().AddAsync(actor);
-        return await unitOfWork.SaveChangesAsync();
+        var result = await unitOfWork.SaveChangesAsync();
+
+        if (result <= 0)
+            throw new Exception("Failed to create actor");
+
+        return result;
     }
 }
 

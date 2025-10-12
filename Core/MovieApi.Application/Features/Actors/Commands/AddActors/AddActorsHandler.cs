@@ -28,7 +28,11 @@ public class AddActorsHandler : IRequestHandler<AddActorsRequest, int>
         }
 
         await unitOfWork.GetWriteRepository<Actor>().AddRangeAsync(actors);
-        return await unitOfWork.SaveChangesAsync();
+        var result = await unitOfWork.SaveChangesAsync();
+        if (result <= 0)
+            throw new Exception("Failed to add actors.");
+
+        return result;
     }
 }
 

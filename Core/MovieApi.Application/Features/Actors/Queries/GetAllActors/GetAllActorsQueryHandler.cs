@@ -21,9 +21,7 @@ public class GetAllActorsQueryHandler : IRequestHandler<GetAllActorsQueryRequest
     {
         var actors = await unitOfWork.GetReadRepository<Domain.Entities.Actor>().GetAllAsync();
         if (actors == null || actors.Count == 0)
-        {
-            return new GetAllActorsQueryResponse();
-        }
+            throw new Exception("Failed to retrieve actors");
 
         var actorDtos = mapper.Map<IList<ActorDto>>(actors);
         var response = new GetAllActorsQueryResponse()
@@ -32,7 +30,7 @@ public class GetAllActorsQueryHandler : IRequestHandler<GetAllActorsQueryRequest
         };
 
         return response;
-    }
 
+    }
 }
 

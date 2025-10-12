@@ -1,5 +1,6 @@
 using MovieApi.Application;
 using MovieApi.Persistence;
+using MovieApi.Application.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Uygulama başlatılırken exception middleware'i HTTP pipeline'a ekler
+app.ConfigureExceptionHandlingMiddleware();
 
 app.UseAuthorization();
 

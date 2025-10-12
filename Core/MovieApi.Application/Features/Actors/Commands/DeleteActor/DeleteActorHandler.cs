@@ -22,7 +22,7 @@ public class DeleteActorHandler : IRequestHandler<DeleteActorRequest, int>
             unitOfWork.GetWriteRepository<Actor>().Update(actor);
         }
         else
-            return 0; //todo
+            throw new Exception("Actor not found");
 
         return await unitOfWork.SaveChangesAsync();
     }

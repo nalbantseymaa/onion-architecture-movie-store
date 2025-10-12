@@ -27,6 +27,9 @@ public class GetActorCountHandler : IRequestHandler<GetActorCountRequest, GetAct
             predicate: predicate
         );
 
+        if (count < 0)
+            throw new Exception("Could not retrieve actor count");
+
         return new GetActorCountResponse { Count = count };
     }
 }
