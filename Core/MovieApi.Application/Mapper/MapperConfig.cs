@@ -4,7 +4,9 @@ using MovieApi.Application.Features.Actors.Commands.AddActors;
 using MovieApi.Application.Features.Actors.Commands.CreateActor;
 using MovieApi.Application.Features.Actors.Commands.UpdateActor;
 using MovieApi.Application.Features.Actors.Queries.GetAllActors;
+using MovieApi.Application.Features.AppUsers.Commands.CreateUser;
 using MovieApi.Domain.Entities;
+using MovieApi.Domain.Entities.Identity;
 
 namespace MovieApi.Application.Mapper;
 
@@ -30,6 +32,10 @@ public class MapperConfig : Profile
             .ForMember(dest => dest.GenreName, opt => opt.MapFrom(src => src.Genre != null ? src.Genre.Name : string.Empty))
             .ForMember(dest => dest.ActorNames, opt => opt.MapFrom(src => src.Actors != null ? src.Actors.Select(a => $"{a.FirstName} {a.MiddleName} {a.LastName}").ToList() : new List<string>()));
         CreateMap<MovieDto, Movie>();
+
+        CreateMap<CreateUserCommandRequest, AppUser>().ForMember
+        (src => src.OpenDate, opt => opt.MapFrom(dest => DateTime.Now));
+
     }
 }
 

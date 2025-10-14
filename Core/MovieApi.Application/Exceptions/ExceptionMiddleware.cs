@@ -33,7 +33,7 @@ public class ExceptionMiddleware : IMiddleware
             }.ToString());
         }
 
-        var errors = new List<string> { $"Error Message : {exception.Message}" };
+        var errors = exception.Message.Split(',').ToList();
 
         return httpContext.Response.WriteAsync(new ExceptionModel
         {

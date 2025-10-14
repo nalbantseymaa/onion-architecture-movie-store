@@ -24,7 +24,7 @@ public class GenreConfiguration : IEntityTypeConfiguration<Genre>
         .HasForeignKey(x => x.GenreId)
         .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasMany(x => x.UsersByGenre)
+        builder.HasMany(x => x.UsersInGenre)
             .WithMany(g => g.FavoriteGenres)
             .UsingEntity(j => j.ToTable("UsersGenres"));
 

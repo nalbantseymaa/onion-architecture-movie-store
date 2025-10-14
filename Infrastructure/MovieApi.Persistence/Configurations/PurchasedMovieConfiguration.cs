@@ -9,7 +9,6 @@ public class PurchasedMovieConfiguration : IEntityTypeConfiguration<PurchasedMov
     public void Configure(EntityTypeBuilder<PurchasedMovie> builder)
     {
         builder.HasKey(x => x.Id);
-        builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Id)
         .IsRequired()
